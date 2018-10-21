@@ -1,7 +1,7 @@
 ## Interface: 80000
 ## Author: John Stephen
 ## Title: Outfitter
-## Version: 5.21a4
+## Version: 5.21
 ## Notes: Clothing and weapon management and automated equipment changes
 ## OptionalDeps: 
 ## RequiredDeps: 
