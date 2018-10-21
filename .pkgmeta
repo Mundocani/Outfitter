@@ -1,0 +1,20 @@
+ignore:
+	- Artwork
+
+externals:
+    Libraries/MC2AddonLib:
+        url: https://github.com/Mundocani/MC2AddonLib.git
+    Libraries/MC2DebugLib:
+        url: https://github.com/Mundocani/MC2DebugLib.git
+    Libraries/MC2SchedulerLib:
+        url: https://github.com/Mundocani/MC2SchedulerLib.git
+    Libraries/MC2EventLib:
+        url: https://github.com/Mundocani/MC2EventLib.git
+    Libraries/MC2UIElementsLib:
+        url: https://github.com/Mundocani/MC2UIElementsLib.git
+    Libraries/MC2ItemLinkLib:
+        url: https://github.com/Mundocani/MC2ItemLinkLib.git
+    Libraries/MC2TooltipLib:
+        url: https://github.com/Mundocani/MC2TooltipLib.git
+    Libraries/MC2ItemStatsLib:
+        url: https://github.com/Mundocani/MC2ItemStatsLib.git
