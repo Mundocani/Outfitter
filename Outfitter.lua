@@ -4270,12 +4270,12 @@ function Outfitter:UpdateShapeshiftState()
 	-- Search for the active shapeshift form, plus while searching deactivate any forms which aren't the active one
 	local activeForm
 	local numForms = GetNumShapeshiftForms()
-	self:DebugMessage("Outfitter:UpdateShapeshiftState(): %d forms", numForms)
+	--self:DebugMessage("Outfitter:UpdateShapeshiftState(): %d forms", numForms)
 	for index = 1, numForms do
 		local texture, isActive, isCastable, shapeshiftID = GetShapeshiftFormInfo(index)
 		local _
 		
-		self:DebugMessage("%s: %s texture = %s %s", tostring(index), tostring(shapeshiftID), tostring(texture), isActive and "ACTIVE" or "not active")
+		--self:DebugMessage("%s: %s texture = %s %s", tostring(index), tostring(shapeshiftID), tostring(texture), isActive and "ACTIVE" or "not active")
 		
 		local shapeshiftInfo = self.cShapeshiftIDInfo[shapeshiftID]
 		
