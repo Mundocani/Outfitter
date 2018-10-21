@@ -1560,7 +1560,7 @@ function Outfitter.OutfitBar._SettingsDialog:NewCheckbutton(pTitle, pOnClickFunc
 	
 	-- Create the button
 	
-	local vCheckbutton = CreateFrame("Checkbutton", vName, self, "OptionsCheckButtonTemplate")
+	local vCheckbutton = CreateFrame("Checkbutton", vName, self, "OutfitterCheckboxTemplate")
 	
 	vCheckbutton.OnClickFunction = pOnClickFunction
 	vCheckbutton:SetScript("OnClick", self.Checkbutton_OnClick)

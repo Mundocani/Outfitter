@@ -1,4 +1,4 @@
-﻿----------------------------------------
+----------------------------------------
 -- Modular scripting
 ----------------------------------------
 --[[
@@ -794,11 +794,11 @@ or (setting.DisablePVP and UnitIsPVP("player")) then
     return
 end
 
-local zoneText = GetRealZoneText()
+local bestMapID = C_Map.GetBestMapForUnit("PLAYER")
 if setting.DisableVashjir
-and (zoneText == GetMapNameByID(614) -- Abyssal Depths
-or zoneText == GetMapNameByID(610) -- Kelp'thar Forest
-or zoneText == GetMapNameByID(615)) then -- Shimmering Expanse
+and (bestMapID == 204 -- Abyssal Depths
+or bestMapID == 201 -- Kelp'thar Forest
+or bestMapID == 205) then -- Shimmering Expanse
     return
 end
 
@@ -1442,7 +1442,8 @@ end
 -- $EVENTS QUEST_LOG_UPDATE ZONE_CHANGED ZONE_CHANGED_NEW_AREA ZONE_CHANGED_INDOORS
 -- $DESC Equips the outfit when you're on the Multiphase Survey quest and enter Nagrand, unequips when you complete the quest or leave Nagrand
 
-if GetZoneText() == GetMapNameByID(477) then -- Nagrand
+local bestMapID = C_Map.GetBestMapForUnit("PLAYER")
+if bestMapID == 107 then -- Nagrand
     local vOnQuest, vCompleted = Outfitter:PlayerIsOnQuestID(11880)
     
     if vOnQuest and not vCompleted then
@@ -1583,30 +1584,54 @@ end
 -- $EVENTS ACTIVE_TALENT_GROUP_CHANGED
 -- $DESC Equips the outfit when you're in a 5 player party instance
 
-local name, instanceType, difficultyIndex, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, mapID = GetInstanceInfo()
+local bestMapID = C_Map.GetBestMapForUnit("PLAYER")
 
-if type == "solo" or "party"
-        and (name == GetMapNameByID(680) -- Ragefire Chasm
-        or name == GetMapNameByID(756) -- The Deadmines
-        or name == GetMapNameByID(749) -- Wailing Caverns
-        or name == GetMapNameByID(764) -- Shadowfang Keep
-        or name == GetMapNameByID(688) -- Blackfathom Deeps
-        or name == GetMapNameByID(690) -- The Stockade
-        or name == GetMapNameByID(691) -- Gnomeregan
-        or name == GetMapNameByID(871) -- Scarlet Halls 
-        or name == GetMapNameByID(874) -- Scarlet Monastery
-        or name == GetMapNameByID(761) -- Razorfen Kraul
-        or name == GetMapNameByID(750) -- Maraudon
-        or name == GetMapNameByID(692) -- Uldaman
-        or name == GetMapNameByID(898) -- Scholomance
-        or name == GetMapNameByID(760) -- Razorfen Downs
-        or name == GetMapNameByID(699) -- Dire Maul
-        or name == GetMapNameByID(765) -- Stratholme
-        or name == GetMapNameByID(686) -- Zul'Farrak
-        or name == GetMapNameByID(704) -- Blackrock Depths
-        or name == GetMapNameByID(687) -- Temple of Atal'Hakkar
-        or name == GetMapNameByID(721) -- Blackrock Spire    
-        or name == GetMapNameByID(797) -- Hellfire Ramparts
+if bestMapID == 213 -- Ragefire Chasm
+    or name == GetMapNameByID(756) -- The Deadmines
+    or name == GetMapNameByID(749) -- Wailing Caverns
+    or name == GetMapNameByID(764) -- Shadowfang Keep
+    or name == GetMapNameByID(688) -- Blackfathom Deeps
+    or name == GetMapNameByID(690) -- The Stockade
+    or name == GetMapNameByID(691) -- Gnomeregan
+    or name == GetMapNameByID(871) -- Scarlet Halls
+    or name == GetMapNameByID(874) -- Scarlet Monastery
+    or name == GetMapNameByID(761) -- Razorfen Kraul
+    or name == GetMapNameByID(750) -- Maraudon
+    or name == GetMapNameByID(692) -- Uldaman
+    or name == GetMapNameByID(898) -- Scholomance
+    or name == GetMapNameByID(760) -- Razorfen Downs
+    or name == GetMapNameByID(699) -- Dire Maul
+    or name == GetMapNameByID(765) -- Stratholme
+    or name == GetMapNameByID(686) -- Zul'Farrak
+    or name == GetMapNameByID(704) -- Blackrock Depths
+    or name == GetMapNameByID(687) -- Temple of Atal'Hakkar
+    or name == GetMapNameByID(721) -- Blackrock Spire
+    or name == GetMapNameByID(797) -- Hellfire Ramparts
+    or name == GetMapNameByID(725) -- The Blood Furnace
+    or name == GetMapNameByID(710) -- Shattered Halls
+    or name == GetMapNameByID(728) -- The Slave Pens
+    or name == GetMapNameByID(726) -- The Underbog
+    or name == GetMapNameByID(727) -- The Steamvault
+    or name == GetMapNameByID(732) -- Mana-Tombs
+    or name == GetMapNameByID(722) -- Auchenai Crypts
+    or name == GetMapNameByID(724) -- Shadow Labyrinth
+    or name == GetMapNameByID(734) -- Old Hillsbrad Foothills
+    or name == GetMapNameByID(723) -- Sethekk Halls
+    or name == GetMapNameByID(730) -- The Mechanar
+    or name == GetMapNameByID(729) -- The Botanica
+    or name == GetMapNameByID(733) -- Black Morass
+    or name == GetMapNameByID(731) -- The Arcatraz
+    or name == GetMapNameByID(798) -- Magisters' Terrace
+    or name == GetMapNameByID(522) -- Ahn'kahet: The Old Kingdom
+    or name == GetMapNameByID(533) -- Azjol-Nerub
+    or name == GetMapNameByID(534) -- Drak'Tharon Keep
+    or name == GetMapNameByID(530) -- Gundrak
+    or name == GetMapNameByID(526) -- Halls of Stone
+    or name == GetMapNameByID(520) -- The Nexus
+    or name == GetMapNameByID(523) -- Utgarde Keep
+    or name == GetMapNameByID(536) -- Violet Hold
+    or (difficulty == 2
+    and (name == GetMapNameByID(797) -- Hellfire Ramparts
         or name == GetMapNameByID(725) -- The Blood Furnace
         or name == GetMapNameByID(710) -- Shattered Halls
         or name == GetMapNameByID(728) -- The Slave Pens
@@ -1622,35 +1647,10 @@ if type == "solo" or "party"
         or name == GetMapNameByID(733) -- Black Morass
         or name == GetMapNameByID(731) -- The Arcatraz
         or name == GetMapNameByID(798) -- Magisters' Terrace
-        or name == GetMapNameByID(522) -- Ahn'kahet: The Old Kingdom
-        or name == GetMapNameByID(533) -- Azjol-Nerub
-        or name == GetMapNameByID(534) -- Drak'Tharon Keep
-        or name == GetMapNameByID(530) -- Gundrak
-        or name == GetMapNameByID(526) -- Halls of Stone
-        or name == GetMapNameByID(520) -- The Nexus
-        or name == GetMapNameByID(523) -- Utgarde Keep
-        or name == GetMapNameByID(536) -- Violet Hold
-        or (difficulty == 2
-        and (name == GetMapNameByID(797) -- Hellfire Ramparts
-            or name == GetMapNameByID(725) -- The Blood Furnace
-            or name == GetMapNameByID(710) -- Shattered Halls
-            or name == GetMapNameByID(728) -- The Slave Pens
-            or name == GetMapNameByID(726) -- The Underbog
-            or name == GetMapNameByID(727) -- The Steamvault
-            or name == GetMapNameByID(732) -- Mana-Tombs
-            or name == GetMapNameByID(722) -- Auchenai Crypts
-            or name == GetMapNameByID(724) -- Shadow Labyrinth
-            or name == GetMapNameByID(734) -- Old Hillsbrad Foothills
-            or name == GetMapNameByID(723) -- Sethekk Halls
-            or name == GetMapNameByID(730) -- The Mechanar
-            or name == GetMapNameByID(729) -- The Botanica
-            or name == GetMapNameByID(733) -- Black Morass
-            or name == GetMapNameByID(731) -- The Arcatraz
-            or name == GetMapNameByID(798) -- Magisters' Terrace
-            ))) then
-        equip = true
-    else
-        equip = false
+        ))) then
+    equip = true
+else
+    equip = false
 end
 ]],
     },    

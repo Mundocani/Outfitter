@@ -355,7 +355,7 @@ function Outfitter._EditScriptDialog:GetScriptSettings()
 			elseif vType == "stringtable"
 			or vType == "zonelist" then
 				local vEditBox = getglobal(vFrame:GetName().."EditBox")
-				
+
 				vValue = {}
 				
 				for vLine in string.gmatch(vEditBox:GetText(), "([^\r\n]*)") do

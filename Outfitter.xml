@@ -11,6 +11,15 @@
 	</Button>
 
 	<CheckButton name="OutfitterCheckboxTemplate" inherits="OptionsCheckButtonTemplate" virtual="true">
+		<Scripts>
+			<OnClick>
+				if self:GetChecked() then
+					PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
+				else
+					PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
+				end
+			</OnClick>
+		</Scripts>
 	</CheckButton>
 	
 	<Frame name="OutfitterInputFrameTemplate" hidden="false" virtual="true">
@@ -830,7 +839,7 @@
 							</Layer>
 						</Layers>
 						<Frames>
-							<CheckButton name="OutfitterAutoSwitch" inherits="OptionsCheckButtonTemplate">
+							<CheckButton name="OutfitterAutoSwitch" inherits="OutfitterCheckboxTemplate">
 								<Anchors>
 									<Anchor point="TOPLEFT">
 										<Offset>
@@ -857,7 +866,7 @@
 									</OnLeave>
 								</Scripts>
 							</CheckButton>
-							<CheckButton name="OutfitterShowOutfitBar" inherits="OptionsCheckButtonTemplate">
+							<CheckButton name="OutfitterShowOutfitBar" inherits="OutfitterCheckboxTemplate">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeTo="OutfitterAutoSwitch" relativePoint="BOTTOMLEFT">
 										<Offset>
@@ -882,7 +891,7 @@
 									</OnLeave>
 								</Scripts>
 							</CheckButton>
-							<CheckButton name="OutfitterShowMinimapButton" inherits="OptionsCheckButtonTemplate">
+							<CheckButton name="OutfitterShowMinimapButton" inherits="OutfitterCheckboxTemplate">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeTo="OutfitterShowOutfitBar" relativePoint="BOTTOMLEFT">
 										<Offset>
@@ -909,7 +918,7 @@
 									</OnLeave>
 								</Scripts>
 							</CheckButton>
-							<CheckButton name="OutfitterShowHotkeyMessages" inherits="OptionsCheckButtonTemplate">
+							<CheckButton name="OutfitterShowHotkeyMessages" inherits="OutfitterCheckboxTemplate">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeTo="OutfitterShowMinimapButton" relativePoint="BOTTOMLEFT">
 										<Offset>
@@ -936,7 +945,7 @@
 									</OnLeave>
 								</Scripts>
 							</CheckButton>
-							<CheckButton name="OutfitterTooltipInfo" inherits="OptionsCheckButtonTemplate">
+							<CheckButton name="OutfitterTooltipInfo" inherits="OutfitterCheckboxTemplate">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeTo="OutfitterShowHotkeyMessages" relativePoint="BOTTOMLEFT">
 										<Offset>
@@ -963,7 +972,7 @@
 									</OnLeave>
 								</Scripts>
 							</CheckButton>
-							<CheckButton name="OutfitterItemComparisons" inherits="OptionsCheckButtonTemplate">
+							<CheckButton name="OutfitterItemComparisons" inherits="OutfitterCheckboxTemplate">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeTo="OutfitterTooltipInfo" relativePoint="BOTTOMLEFT">
 										<Offset>
