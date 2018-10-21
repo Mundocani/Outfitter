@@ -1,13 +1,13 @@
 ## Interface: 80000
 ## Author: John Stephen
 ## Title: Outfitter
-## Version: 5.20.3
+## Version: 5.21
 ## Notes: Clothing and weapon management and automated equipment changes
-## OptionalDeps: Titan, FuBar, TankPoints, ButtonFacade
+## OptionalDeps: 
 ## RequiredDeps: 
 ## SavedVariablesPerCharacter: gOutfitter_Settings
 ## SavedVariables: gOutfitter_GlobalSettings
-## X-ReloadTag: 1
+## X-ReloadTag: 2
 
 Libraries/UTF8/utf8data.lua
 Libraries/UTF8/utf8.lua
