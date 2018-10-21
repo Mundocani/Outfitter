@@ -1152,19 +1152,16 @@ Outfitter.cPanelFrames =
 	"OutfitterAboutFrame",
 }
 
-Outfitter.cShapeshiftTextureInfo =
-{
-	-- Druids
-	[132276] = {ID = "Bear", MaybeInCombat = true},
-	[132115] = {ID = "Cat"},
-	[132144] = {ID = "Travel"},
-	[1394966] = {ID = "Travel"},
-	[132145] = {ID = "Tree"},
+Outfitter.cShapeshiftIDInfo = {
+	-- Druid
+	[5487] = {ID = "Bear", MaybeInCombat = true},
+	[768] = {ID = "Cat"},
+	[783] = {ID = "Travel"},
+	[24858] = {ID = "Moonkin"},
 	CasterForm = {ID = "Caster"}, -- this is a psuedo-form which is active when no other druid form is
-	
-	-- Rogues
-	Ability_Stealth = {ID = "Stealth"},
-	Spell_Nature_Invisibility = {ID = "Stealth"},
+
+	-- Rogue
+	[1784] = {ID = "Stealth"},
 }
 
 function Outfitter:ToggleOutfitterFrame()
@@ -4269,52 +4266,47 @@ function Outfitter:UpdateShapeshiftState()
 	if not self.Settings.ShapeshiftIndexInfo then
 		self.Settings.ShapeshiftIndexInfo = {}
 	end
-	
-	local vNumForms = GetNumShapeshiftForms()
-	
-	-- Deactivate the previous shapeshift form first
-	
-	local vActiveForm
-	
-	--self:DebugMessage("Outfitter:UpdateShapeshiftState(): %d forms", vNumForms)
-	for vIndex = 1, vNumForms do
-		local vTexture, vName, vIsActive, vIsCastable = GetShapeshiftFormInfo(vIndex)
+
+	-- Search for the active shapeshift form, plus while searching deactivate any forms which aren't the active one
+	local activeForm
+	local numForms = GetNumShapeshiftForms()
+	self:DebugMessage("Outfitter:UpdateShapeshiftState(): %d forms", numForms)
+	for index = 1, numForms do
+		local texture, isActive, isCastable, shapeshiftID = GetShapeshiftFormInfo(index)
 		local _
 		
-		--self:DebugMessage("%d: %s texture = %s (%d) %s", vIndex, vName, vTexture, vTexture:len(), vIsActive and "ACTIVE" or "not active")
+		self:DebugMessage("%s: %s texture = %s %s", tostring(index), tostring(shapeshiftID), tostring(texture), isActive and "ACTIVE" or "not active")
 		
-		local vShapeshiftInfo = self.cShapeshiftTextureInfo[vTexture]
+		local shapeshiftInfo = self.cShapeshiftIDInfo[shapeshiftID]
 		
-		if vShapeshiftInfo then
-			self.Settings.ShapeshiftIndexInfo[vIndex] = vShapeshiftInfo
+		if shapeshiftInfo then
+			self.Settings.ShapeshiftIndexInfo[index] = shapeshiftInfo
 		else
-			vShapeshiftInfo = self.Settings.ShapeshiftIndexInfo[vIndex]
+			shapeshiftInfo = self.Settings.ShapeshiftIndexInfo[index]
 		end
 		
-		if vShapeshiftInfo then
-			if not vIsActive then
-				self:UpdateShapeshiftInfo(vShapeshiftInfo, false)
+		if shapeshiftInfo then
+			if not isActive then
+				self:UpdateShapeshiftInfo(shapeshiftInfo, false)
 			else
-				vActiveForm = vShapeshiftInfo
+				activeForm = shapeshiftInfo
 			end
 		end
 	end
 	
 	-- Substitute the druid caster pseudo-form if necessary or deactivate it
 	-- if it's not
-	
 	if self.PlayerClass == "DRUID" then
-		if not vActiveForm then
-			vActiveForm = self.cShapeshiftTextureInfo.CasterForm
+		if not activeForm then
+			activeForm = self.cShapeshiftIDInfo.CasterForm
 		else
-			self:UpdateShapeshiftInfo(self.cShapeshiftTextureInfo.CasterForm, false)
+			self:UpdateShapeshiftInfo(self.cShapeshiftIDInfo.CasterForm, false)
 		end
 	end
 	
 	-- Activate the new form
-	
-	if vActiveForm then
-		self:UpdateShapeshiftInfo(vActiveForm, true)
+	if activeForm then
+		self:UpdateShapeshiftInfo(activeForm, true)
 	end
 	
 	self:EndEquipmentUpdate()
