@@ -25,7 +25,7 @@ OutfitterPrefix.lua
 
 Libraries/MC2AddonLib/MC2AddonLib.lua
 Libraries/MC2DebugLib/MC2DebugLib.lua
-Libraries/MC2SAchedulerLib/MC2SchedulerLib.lua
+Libraries/MC2SchedulerLib/MC2SchedulerLib.lua
 Libraries/MC2EventLib/MC2EventLib.lua
 Libraries/MC2UIElementsLib/MC2UIElementsLib.lua
 Libraries/MC2ItemLinkLib/MC2ItemLinkLib.lua
