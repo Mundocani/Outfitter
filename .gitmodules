@@ -1,0 +1,24 @@
+[submodule "Libraries/MC2AddonLib"]
+	path = Libraries/MC2AddonLib
+	url = https://github.com/Mundocani/MC2AddonLib
+[submodule "Libraries/MC2DebugLib"]
+	path = Libraries/MC2DebugLib
+	url = https://github.com/Mundocani/MC2DebugLib
+[submodule "Libraries/MC2SchedulerLib"]
+	path = Libraries/MC2SchedulerLib
+	url = https://github.com/Mundocani/MC2SchedulerLib
+[submodule "Libraries/MC2EventLib"]
+	path = Libraries/MC2EventLib
+	url = https://github.com/Mundocani/MC2EventLib
+[submodule "Libraries/MC2UIElementsLib"]
+	path = Libraries/MC2UIElementsLib
+	url = https://github.com/Mundocani/MC2UIElementsLib
+[submodule "Libraries/MC2ItemLinkLib"]
+	path = Libraries/MC2ItemLinkLib
+	url = https://github.com/Mundocani/MC2ItemLinkLib
+[submodule "Libraries/MC2TooltipLib"]
+	path = Libraries/MC2TooltipLib
+	url = https://github.com/Mundocani/MC2TooltipLib
+[submodule "Libraries/MC2ItemStatsLib"]
+	path = Libraries/MC2ItemStatsLib
+	url = https://github.com/Mundocani/MC2ItemStatsLib
