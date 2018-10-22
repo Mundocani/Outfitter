@@ -434,9 +434,9 @@ if event == "GAMETOOLTIP_SHOW" then
     -- Check the tooltip for an orange or red tradeskill message
     -- and equip the outfit if there is one
 
-    local hasText, isDifficult, isExact = Outfitter:TooltipContainsLine(GameTooltip, "]]..pTooltipGatherMessage..[[")
+    local hasText, isDifficult, isExact, lineNumber = Outfitter:TooltipContainsLine(GameTooltip, "]]..pTooltipGatherMessage..[[")
 
-    if hasText and isExact and (setting.ignoreDifficulty or isDifficult) then
+    if hasText and isExact and lineNumber > 1 and (setting.ignoreDifficulty or isDifficult) then
         equip = true
     end
 
@@ -1535,7 +1535,8 @@ end
 -- $EVENTS TRADE_SKILL_SHOW TRADE_SKILL_CLOSE
 
 if event == "TRADE_SKILL_SHOW" then
-    if C_TradeSkillUI.GetTradeSkillLine() == 185 then
+    local skillLineID, _, _, _, _, skillLineID2 = C_TradeSkillUI.GetTradeSkillLine()
+    if skillLineID == 185 or skillLineID2 == 185 then
         equip = true
     end
 elseif event == "TRADE_SKILL_CLOSE" then
@@ -1543,7 +1544,8 @@ elseif event == "TRADE_SKILL_CLOSE" then
         equip = false
     end
 elseif event == "TRADE_SKILL_UPDATE" then
-    if C_TradeSkillUI.GetTradeSkillLine() == 185 then
+    local skillLineID, _, _, _, _, skillLineID2 = C_TradeSkillUI.GetTradeSkillLine()
+    if skillLineID == 185 or skillLineID2 == 185 then
         equip = true
     elseif didEquip then
         equip = false

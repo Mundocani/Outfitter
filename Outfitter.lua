@@ -6775,7 +6775,7 @@ function Outfitter:TooltipContainsLine(pTooltip, pText)
 			local vColor = {}
 			vColor.r, vColor.g, vColor.b = vText:GetTextColor()
 			local vHSVColor = Outfitter:RGBToHSV(vColor)
-			return true, vHSVColor.s > 0.2 and vHSVColor.v > 0.2 and (vHSVColor.h < 50 or vHSVColor.h > 150), pText == vTextString
+			return true, vHSVColor.s > 0.2 and vHSVColor.v > 0.2 and (vHSVColor.h < 50 or vHSVColor.h > 150), pText == vTextString, vLine
 		end
 	end
 end
@@ -7640,16 +7640,16 @@ function Outfitter:GetMountIDByName(name)
 	end
 end
 
-function Outfitter:GetCompanionIDByName(pName)
-	local vNumPets = C_PetJournal.GetNumPets(false)
-	local vLowerName = pName:lower()
-	for vIndex = 1, vNumPets do
-		local vPetID, vSpeciesID, vIsOwned, vCustomName, vLevel, vFavorite, vIsRevoked, vName = C_PetJournal.GetPetInfoByIndex(vIndex, false)
-		if vName:lower() == vLowerName then
-			return vPetID
+function Outfitter:GetCompanionIDByName(nameToFind)
+	local numPets = C_PetJournal.GetNumPets(false)
+	local lowerName = nameToFind:lower()
+	for index = 1, numPets do
+		local petID, speciesID, isOwned, customName, level, favorite, isRevoked, name = C_PetJournal.GetPetInfoByIndex(index, false)
+		if name:lower() == lowerName then
+			return petID
 		end
 	end
-	Outfitter:DebugMessage("GetCompanionByName(%s): Not found", tostring(pName))
+	Outfitter:DebugMessage("GetCompanionByName(%s): Not found", tostring(nameToFind))
 end
 
 function Outfitter:GetSummonedCompanionID()
