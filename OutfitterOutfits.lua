@@ -104,32 +104,33 @@ function Outfitter._OutfitMethods:DisableAllSlots()
 	Outfitter.DisplayIsDirty = true
 end
 
-function Outfitter._OutfitMethods:AddItem(pSlotName, pItemInfo)
-	if pItemInfo == nil then
-		pItemInfo = Outfitter:NewEmptyItemInfo()
+function Outfitter._OutfitMethods:AddItem(slotName, itemInfo)
+	if itemInfo == nil then
+		itemInfo = Outfitter:NewEmptyItemInfo()
 	end
 	
-	self.Items[pSlotName] =
+	self.Items[slotName] =
 	{
-		Code = tonumber(pItemInfo.Code),
-		SubCode = tonumber(pItemInfo.SubCode),
-		Name = pItemInfo.Name,
-		EnchantCode = tonumber(pItemInfo.EnchantCode),
-		JewelCode1 = tonumber(pItemInfo.JewelCode1),
-		JewelCode2 = tonumber(pItemInfo.JewelCode2),
-		JewelCode3 = tonumber(pItemInfo.JewelCode3),
-		JewelCode4 = tonumber(pItemInfo.JewelCode4),
-		UniqueID = tonumber(pItemInfo.UniqueID),
-		UpgradeTypeID = tonumber(pItemInfo.UpgradeTypeID),
-		InstanceDifficultyID = tonumber(pItemInfo.InstanceDifficultyID),
-		BonusIDs = tostring(pItemInfo.BonusIDs),
-		UpgradeID = tonumber(pItemInfo.UpgradeID),
-		InvType = pItemInfo.InvType,
-		SubType = pItemInfo.SubType,
-		Link = pItemInfo.Link,
-		Quality = pItemInfo.Quality,
-		Level = pItemInfo.Level,
-		BagType = pItemInfo.BagType,
+		Code = tonumber(itemInfo.Code),
+		SubCode = tonumber(itemInfo.SubCode),
+		Name = itemInfo.Name,
+		EnchantCode = tonumber(itemInfo.EnchantCode),
+		JewelCode1 = tonumber(itemInfo.JewelCode1),
+		JewelCode2 = tonumber(itemInfo.JewelCode2),
+		JewelCode3 = tonumber(itemInfo.JewelCode3),
+		JewelCode4 = tonumber(itemInfo.JewelCode4),
+		UniqueID = tonumber(itemInfo.UniqueID),
+		UpgradeTypeID = tonumber(itemInfo.UpgradeTypeID),
+		InstanceDifficultyID = tonumber(itemInfo.InstanceDifficultyID),
+		BonusIDs = tostring(itemInfo.BonusIDs),
+		UpgradeID = tonumber(itemInfo.UpgradeID),
+		InvType = itemInfo.InvType,
+		SubType = itemInfo.SubType,
+		Link = itemInfo.Link,
+		Quality = itemInfo.Quality,
+		Level = itemInfo.Level,
+		BagType = itemInfo.BagType,
+		AzeriteCodes = itemInfo.AzeriteCodes
 	}
 	
 	Outfitter.DisplayIsDirty = true
@@ -310,6 +311,7 @@ function Outfitter._OutfitMethods:UpdateDatabaseItemCodes(pInventoryCache)
 				vOutfitItem.InstanceDifficultyID = vItem.InstanceDifficultyID
 				vOutfitItem.BonusIDs = vItem.BonusIDs
 				vOutfitItem.UpgradeID = vItem.UpgradeID
+				vOutfitItem.AzeriteCodes = vItem.AzeriteCodes
 				vOutfitItem.Checksum = nil
 			else
 				vResult = false

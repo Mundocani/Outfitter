@@ -63,44 +63,47 @@ function Outfitter:InventorySlotIsEmpty(pInventorySlot)
 	return GetInventoryItemTexture("player", self.cSlotIDs[pInventorySlot]) == nil
 end
 
-function Outfitter:GetBagItemInfo(pBagIndex, pSlotIndex)
-	local vItemLink = GetContainerItemLink(pBagIndex, pSlotIndex)
-	if not vItemLink then
+function Outfitter:GetBagItemInfo(bagIndex, slotIndex)
+	local itemLink = GetContainerItemLink(bagIndex, slotIndex)
+	if not itemLink then
 		return
 	end
 
-	local vItemInfo = self:GetItemInfoFromLink(vItemLink)
-	if not vItemInfo then
+	local itemInfo = self:GetItemInfoFromLink(itemLink)
+	if not itemInfo then
 		return
 	end
+
+	local location = ItemLocation:CreateFromBagAndSlot(bagIndex, slotIndex)
+
+	itemInfo.Texture = GetContainerItemInfo(bagIndex, slotIndex)
+	-- itemInfo.Gem1, itemInfo.Gem2, itemInfo.Gem3, itemInfo.Gem4 = GetContainerItemGems(bagIndex, slotIndex)
+	itemInfo.AzeriteCodes = self:GetAzeriteCodesForLocation(location)
+	itemInfo.Location = {BagIndex = bagIndex, BagSlotIndex = slotIndex}
 	
-	vItemInfo.Texture = GetContainerItemInfo(pBagIndex, pSlotIndex)
-	-- vItemInfo.Gem1, vItemInfo.Gem2, vItemInfo.Gem3, vItemInfo.Gem4 = GetContainerItemGems(pBagIndex, pSlotIndex)
-	vItemInfo.Location = {BagIndex = pBagIndex, BagSlotIndex = pSlotIndex}
-	
-	return vItemInfo
+	return itemInfo
 end
 
-function Outfitter:GetBagItemLinkInfo(pBagIndex, pSlotIndex)
-	local vItemLink = GetContainerItemLink(pBagIndex, pSlotIndex)
+function Outfitter:GetBagItemLinkInfo(bagIndex, slotIndex)
+	local itemLink = GetContainerItemLink(bagIndex, slotIndex)
 	
-	if not vItemLink then
+	if not itemLink then
 		return
 	end
 	
-	return self:ParseItemLink2(vItemLink)
+	return self:ParseItemLink2(itemLink)
 end
 
-function Outfitter:GetBagItemInvType(pBagIndex, pSlotIndex)
-	local vItemLink = GetContainerItemLink(pBagIndex, pSlotIndex)
+function Outfitter:GetBagItemInvType(bagIndex, slotIndex)
+	local itemLink = GetContainerItemLink(bagIndex, slotIndex)
 	
-	if not vItemLink then
+	if not itemLink then
 		return
 	end
 	
-	local _, _, _, _, _, _, _, _, vItemInvType = GetItemInfo(vItemLink)
+	local _, _, _, _, _, _, _, _, itemInvType = GetItemInfo(itemLink)
 	
-	return vItemInvType
+	return itemInvType
 end
 
 function Outfitter:GetItemLocationLink(pItemLocation)
@@ -473,23 +476,49 @@ function Outfitter:GetInventoryItemInfo(pInventorySlot)
 	return vItemInfo
 end
 
-function Outfitter:GetSlotIDItemInfo(pSlotID)
-	local vItemLink = self:GetInventorySlotIDLink(pSlotID)
-	if not vItemLink then
+function Outfitter:GetSlotIDItemInfo(slotID)
+	local itemLink = self:GetInventorySlotIDLink(slotID)
+	if not itemLink then
 		return
 	end
 
-	local vItemInfo = self:GetItemInfoFromLink(vItemLink)
-	if not vItemInfo then
+	local itemInfo = self:GetItemInfoFromLink(itemLink)
+	if not itemInfo then
 		return
 	end
-	
-	vItemInfo.Quality = GetInventoryItemQuality("player", pSlotID)
-	vItemInfo.Texture = GetInventoryItemTexture("player", pSlotID)
-	-- vItemInfo.Gem1, vItemInfo.Gem2, vItemInfo.Gem3, vItemInfo.Gem4 = GetInventoryItemGems(pSlotID)
-	vItemInfo.Location = {SlotID = pSlotID}
-	
-	return vItemInfo
+
+	local location = ItemLocation:CreateFromEquipmentSlot(slotID)
+
+	itemInfo.Quality = GetInventoryItemQuality("player", slotID)
+	itemInfo.Texture = GetInventoryItemTexture("player", slotID)
+	-- itemInfo.Gem1, itemInfo.Gem2, itemInfo.Gem3, itemInfo.Gem4 = GetInventoryItemGems(slotID)
+	itemInfo.AzeriteCodes = self:GetAzeriteCodesForLocation(location)
+	itemInfo.Location = {SlotID = slotID}
+
+	local location = ItemLocation:CreateFromEquipmentSlot(slotID)
+
+	return itemInfo
+end
+
+function Outfitter:GetAzeriteCodesForLocation(location)
+	if not C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(location) then
+		return
+	end
+
+	local allTierInfo = C_AzeriteEmpoweredItem.GetAllTierInfo(location)
+	local powerIDs
+	for tierIndex, tierInfo in ipairs(allTierInfo) do
+		for _, powerID in ipairs(tierInfo.azeritePowerIDs) do
+			if C_AzeriteEmpoweredItem.IsPowerSelected(location, powerID) then
+				if not powerIDs then
+					powerIDs = {}
+				end
+				powerIDs[powerID] = true
+			end
+		end
+	end
+
+	return powerIDs
 end
 
 function Outfitter:GetNumBags()
@@ -521,18 +550,8 @@ function Outfitter:GetBagList()
 	return vBagList
 end
 
-function Outfitter:GetInventorySlotIDLink(pSlotID)
-	return GetInventoryItemLink("player", pSlotID)
-end
-
-function Outfitter:GetInventorySlotItemInfo(pInventorySlot)
-	local vItemLink = self:GetInventorySlotIDLink(self.cSlotIDs[pInventorySlot])
-
-	if not vItemLink then
-		return
-	end
-	
-	return self:GetItemInfoFromLink(vItemLink)
+function Outfitter:GetInventorySlotIDLink(slotID)
+	return GetInventoryItemLink("player", slotID)
 end
 
 Outfitter.LinkCache =
@@ -931,7 +950,7 @@ function Outfitter._InventoryCache:FindItemIndex(pOutfitItem, pAllowSubCodeWildc
 	local vBestMatchIndex = nil
 	local vNumItemsFound = 0
 	local vFoundIgnoredItem = nil
-	
+
 	for vIndex, vItem in ipairs(vItemFamily) do
 		-- All done if the caller doesn't care about the SubCode
 		
@@ -957,7 +976,8 @@ function Outfitter._InventoryCache:FindItemIndex(pOutfitItem, pAllowSubCodeWildc
 			and vItem.UniqueID == pOutfitItem.UniqueID
 			and vItem.UpgradeTypeID == pOutfitItem.UpgradeTypeID
 			and vItem.BonusIDs == pOutfitItem.BonusIDs
-			and vItem.UpgradeID == pOutfitItem.UpgradeID) then
+			and vItem.UpgradeID == pOutfitItem.UpgradeID
+			and Outfitter.AzeriteCodesMatch(vItem.AzeriteCodes, pOutfitItem.AzeriteCodes)) then
 				if vItem.IgnoreItem then
 					vFoundIgnoredItem = vItem
 				else
@@ -1225,8 +1245,9 @@ function Outfitter._InventoryCache:ItemsAreSame(pItem1, pItem2)
 		   and pItem1.UpgradeTypeID == pItem2.UpgradeTypeID
 		   and pItem1.InstanceDifficultyID == pItem2.InstanceDifficultyID
 		   and pItem1.BonusIDs == pItem2.BonusIDs
-		   and pItem1.UpgradeID == pItem2.UpgradeID)
-		
+		   and pItem1.UpgradeID == pItem2.UpgradeID
+		   and Outfitter.AzeriteCodesMatch(pItem1.AzeriteCodes, pItem2.AzeriteCodes))
+
 		if Outfitter.Debug.TemporaryItems
 		and not vResult then
 			Outfitter:DebugMessage("ItemsAreSame(%s, %s): false", tostring(pItem1.Name), tostring(pItem2.Name))
@@ -1236,75 +1257,79 @@ function Outfitter._InventoryCache:ItemsAreSame(pItem1, pItem2)
 	end
 end
 
-function Outfitter._InventoryCache:InventorySlotContainsItem(pInventorySlot, pOutfitItem)
+function Outfitter._InventoryCache:InventorySlotContainsItem(inventorySlot, outfitItem)
 	-- Nil items are supposed to be ignored, so never claim the slot contains them
-	
-	if pOutfitItem == nil then
+	if outfitItem == nil then
 --		Outfitter:DebugMessage("InventorySlotContainsItem: OutfitItem is nil")
 		return false, nil
 	end
-	
+
 	-- If the item specifies an empty slot check to see if the slot is actually empty
 	
-	if pOutfitItem.Code == 0 then
-		return self.InventoryItems[pInventorySlot] == nil
+	if outfitItem.Code == 0 then
+		return self.InventoryItems[inventorySlot] == nil
 	end
 	
-	local vItems = {}
-	local vNumItems = self:FindAllItemsOrAlt(pOutfitItem, nil, vItems)
-	
-	if vNumItems == 0 then
+	local items = {}
+	local numItems = self:FindAllItemsOrAlt(outfitItem, nil, items)
+
+	if inventorySlot == "HeadSlot" then
+		Outfitter:DebugTable(items, "items")
+	end
+
+	if numItems == 0 then
 --		Outfitter:DebugMessage("InventorySlotContainsItem: OutfitItem not found")
---		Outfitter:DebugTable(pOutfitItem, "InventorySlotContainsItem: OutfitItem")
+--		Outfitter:DebugTable(outfitItem, "InventorySlotContainsItem: OutfitItem")
 		
 		return false
-	elseif vNumItems == 1 then
+	elseif numItems == 1 then
 		-- If there's only one of that item then the enchant code
 		-- is disregarded so just make sure it's in the slot
 		
-		local vMatch = vItems[1].Location.SlotName == pInventorySlot
+		local match = items[1].Location.SlotName == inventorySlot
 		
-		if not vMatch then
---			Outfitter:DebugMessage("InventorySlotContainsItem: Slots don't match %s", tostring(pInventorySlot))
---			Outfitter:DebugTable(vItems[1], "InventorySlotContainsItem: Item")
-		end
+--		if not match then
+--			Outfitter:DebugMessage("InventorySlotContainsItem: Slots don't match %s", tostring(inventorySlot))
+--			Outfitter:DebugTable(items[1], "InventorySlotContainsItem: Item")
+--		end
 		
-		return vMatch, vItems[1]
+		return match, items[1]
 	else
 		-- See if one of the items is in the slot
 		
-		for vIndex, vItem in ipairs(vItems) do
-			if vItem.Location.SlotName == pInventorySlot then
+		for _, item in ipairs(items) do
+			if item.Location.SlotName == inventorySlot then
 				-- Must match the enchant and jewel codes if there are multiple items
 				-- in order to be considered a perfect match
 				
 					-- note SubCode mismatch is not checked for; shouldn't it be?
-				local vCodesMatch = vItem.InvType == "INVTYPE_AMMO"
-				                or (vItem.EnchantCode == pOutfitItem.EnchantCode
-				                and vItem.JewelCode1 == pOutfitItem.JewelCode1
-				                and vItem.JewelCode2 == pOutfitItem.JewelCode2
-				                and vItem.JewelCode3 == pOutfitItem.JewelCode3
-				                and vItem.JewelCode4 == pOutfitItem.JewelCode4
-				                and vItem.UniqueID == pOutfitItem.UniqueID
-				                and vItem.UpgradeTypeID == pOutfitItem.UpgradeTypeID
-				                and vItem.InstanceDifficultyID == pOutfitItem.InstanceDifficultyID
-				                and vItem.BonusIDs == pOutfitItem.BonusIDs
-				                and vItem.UpgradeID == pOutfitItem.UpgradeID)
+				local codesMatch = item.InvType == "INVTYPE_AMMO"
+				                or (item.EnchantCode == outfitItem.EnchantCode
+				                and item.JewelCode1 == outfitItem.JewelCode1
+				                and item.JewelCode2 == outfitItem.JewelCode2
+				                and item.JewelCode3 == outfitItem.JewelCode3
+				                and item.JewelCode4 == outfitItem.JewelCode4
+				                and item.UniqueID == outfitItem.UniqueID
+				                and item.UpgradeTypeID == outfitItem.UpgradeTypeID
+				                and item.InstanceDifficultyID == outfitItem.InstanceDifficultyID
+				                and item.BonusIDs == outfitItem.BonusIDs
+				                and item.UpgradeID == outfitItem.UpgradeID
+				                and Outfitter.AzeriteCodesMatch(item.AzeriteCodes, outfitItem.AzeriteCodes))
 				
-				if not vCodesMatch then
+--				if not codesMatch then
 --					Outfitter:DebugMessage("InventorySlotContainsItem: Items don't match")
---					Outfitter:DebugTable(pOutfitItem, "InventorySlotContainsItem: OutfitItem")
---					Outfitter:DebugTable(vItem, "InventorySlotContainsItem: Item")
-				end
+--					Outfitter:DebugTable(outfitItem, "InventorySlotContainsItem: OutfitItem")
+--					Outfitter:DebugTable(item, "InventorySlotContainsItem: Item")
+--				end
 				
-				return vCodesMatch, vItem
+				return codesMatch, item
 			end
 		end
 		
 		-- No items in the slot
 		
 --		Outfitter:DebugMessage("InventorySlotContainsItem: Items don't match -- no item")
---		Outfitter:DebugTable(pOutfitItem, "InventorySlotContainsItem: OutfitItem")
+--		Outfitter:DebugTable(outfitItem, "InventorySlotContainsItem: OutfitItem")
 		
 		return false, nil
 	end

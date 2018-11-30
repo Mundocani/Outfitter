@@ -83,6 +83,7 @@ Outfitter.CreditPlayersByRealm =
 		["elaundar"] = 1,
 		["Bodar"] = 1,
 		["chullah"] = 1,
+		["AoR_Derangement"] = 1,
 	},
 	["Tester"] =
 	{
@@ -3838,6 +3839,28 @@ function Outfitter:NewEmptyItemInfo()
 	}
 end
 
+function Outfitter.AzeriteCodesMatch(azeriteCodes1, azeriteCodes2)
+	if not azeriteCodes1 and not azeriteCodes2 then
+		return true
+	end
+
+	if not azeriteCodes1 or not azeriteCodes2 then
+		return false
+	end
+
+	if #azeriteCodes1 ~= #azeriteCodes2 then
+		return false
+	end
+
+	for powerID, _ in pairs(azeriteCodes1) do
+		if not azeriteCodes2[powerID] then
+			return false
+		end
+	end
+
+	return true
+end
+
 function Outfitter:GetInventoryOutfit(pName, pOutfit)
 	local vOutfit
 	
@@ -3873,7 +3896,8 @@ function Outfitter:GetInventoryOutfit(pName, pOutfit)
 			or vExistingItem.InstanceDifficultyID ~= vItemInfo.InstanceDifficultyID
 			or vExistingItem.BonusIDs ~= vItemInfo.BonusIDs
 			or vExistingItem.UpgradeID ~= vItemInfo.UpgradeID
-			or vExistingItem.ReforgeID ~= vItemInfo.ReforgeID then
+			or vExistingItem.ReforgeID ~= vItemInfo.ReforgeID
+			or not Outfitter.AzeriteCodesMatch(vExistingItem.AzeriteCodes, vItemInfo.AzeriteCodes) then
 				vOutfit:AddItem(vInventorySlot, vItemInfo)
 			end
 		end
