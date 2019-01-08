@@ -1,4 +1,4 @@
-## Interface: 80000
+## Interface: 80100
 ## Author: John Stephen
 ## Title: Outfitter
 ## Version: 5.22
